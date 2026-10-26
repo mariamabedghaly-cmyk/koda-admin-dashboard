@@ -4,7 +4,6 @@ import {
   DollarSign,
   ShoppingBag,
   Package,
-  TrendingUp,
   RefreshCw,
   Heart,
 } from 'lucide-react';
@@ -20,16 +19,11 @@ export default function DashboardOverview() {
   const [loading, setLoading] = useState(true);
   const { error: toastError } = useToast();
 
-  // =========================================================================
-  // 💡 مثال تعليمي للربط اليدوي بالـ API للأدمن (Manual Admin API Calls):
-  // يتم جلب التوكن من localStorage وتمريره في headers
-  // =========================================================================
-  const loadDashboardDataManual = async () => {
+  const loadDashboardData = async () => {
     setLoading(true);
     const token = localStorage.getItem('token');
 
     try {
-      // 1. استدعاء إحصائيات الطلبات يدوياً
       const ordersRes = await axios.get(
         'https://e-commerce-api-3wara.vercel.app/orders/admin/dashboard',
         {
@@ -40,7 +34,6 @@ export default function DashboardOverview() {
       );
       setStats(ordersRes.data?.dashboard || ordersRes.data || {});
 
-      // 2. استدعاء إحصائيات المفضلة يدوياً
       const wishRes = await axios.get(
         'https://e-commerce-api-3wara.vercel.app/wishlists/admin/stats',
         {
@@ -51,26 +44,25 @@ export default function DashboardOverview() {
       );
       setWishlistStats(wishRes.data?.statistics || wishRes.data || {});
     } catch (err) {
-      toastError(err.response?.data?.message || err.message || 'فشل تحميل بيانات لوحة التحكم');
+      toastError(err.response?.data?.message || err.message || 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadDashboardDataManual();
+    loadDashboardData();
   }, []);
 
   return (
     <div className="space-y-8">
-      {/* Top action row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            لوحة الإحصائيات العامة (Live Metrics)
+            Dashboard Overview
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-            GET /orders/admin/dashboard & /wishlists/admin/stats (Manual Headers)
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Real-time sales, order fulfillment, and inventory analytics
           </p>
         </div>
 
@@ -79,13 +71,12 @@ export default function DashboardOverview() {
           size="sm"
           icon={RefreshCw}
           loading={loading}
-          onClick={loadDashboardDataManual}
+          onClick={loadDashboardData}
         >
-          تحديث الإحصائيات يدوياً
+          Refresh Data
         </Button>
       </div>
 
-      {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Total Revenue"
@@ -115,13 +106,12 @@ export default function DashboardOverview() {
         />
       </div>
 
-      {/* Recent Orders Overview */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-base text-slate-900 dark:text-white">
-            Recent Store Orders
+            Recent Orders
           </h3>
-          <span className="text-xs text-slate-400">بيانات حية مباشرة من السيرفر</span>
+          <span className="text-xs text-slate-400">Latest customer orders</span>
         </div>
 
         {loading ? (
@@ -162,7 +152,7 @@ export default function DashboardOverview() {
                 ) : (
                   <tr>
                     <td colSpan="4" className="py-8 text-center text-xs text-slate-400">
-                      No recent orders recorded in database yet.
+                      No recent orders found.
                     </td>
                   </tr>
                 )}

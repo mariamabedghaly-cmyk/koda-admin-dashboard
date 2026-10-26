@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import AdminLayout from '../components/layout/AdminLayout';
 import AdminLoginPage from '../pages/AdminLoginPage';
 import DashboardOverview from '../pages/DashboardOverview';
@@ -13,10 +13,8 @@ import AdminRoute from './AdminRoute';
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Public Login Route */}
       <Route path="/login" element={<AdminLoginPage />} />
 
-      {/* Protected Admin Routes */}
       <Route
         path="/"
         element={
@@ -34,13 +32,12 @@ export default function AppRoutes() {
           path="settings"
           element={
             <div className="p-8 text-center text-sm text-slate-500">
-              Admin settings panel (Theme, API Keys, Store Preferences)
+              Admin settings panel
             </div>
           }
         />
       </Route>
 
-      {/* Fallback */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
