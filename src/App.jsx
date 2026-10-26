@@ -1,20 +1,14 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
-import { ToastProvider } from './context/ToastContext';
-import AppRoutes from './routes/AppRoutes';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-center">
+      <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
+        Koda Admin Dashboard
+      </h1>
+      <p className="text-slate-600 max-w-md">
+        Starter template ready for the admin team. Check README.md for task assignments and API documentation.
+      </p>
+    </div>
   );
 }
