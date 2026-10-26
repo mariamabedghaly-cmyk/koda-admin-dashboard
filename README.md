@@ -6,6 +6,9 @@ Welcome to the **Koda Store Admin Dashboard** repository! This project represent
 * **Team:** Member 1 (Team Leader) & Members 10 through 13
 * **Tech Stack:** React 18, Vite, Tailwind CSS, React Router DOM v6, Axios
 
+> ⚠️ **TRAINING WORKSPACE SPECIFICATION:**  
+> This repository is a **clean starter boilerplate**. There are **no pre-built components or pages** in the codebase. Each team member is required to **create their assigned files from scratch**, build the UI with Tailwind CSS, and write the **manual API integration** directly using `axios` as specified below.
+
 ---
 
 ## 🔗 Live Backend API & Admin Credentials
@@ -85,25 +88,24 @@ All admin endpoints require an active administrator JWT token (`role === 'admin'
 ## 👥 Detailed Member-by-Member Task Assignment
 
 ### 👑 Member 1: Team Leader & Core Architecture
-* **Assigned Files:**
-  * `package.json`, `vite.config.js`, `tailwind.config.js`, `index.html`
-  * `src/components/common/` (`Button.jsx`, `Input.jsx`, `Modal.jsx`, `LoadingSpinner.jsx`, `Skeleton.jsx`, `Toast.jsx`)
-  * `src/components/admin/` (`StatCard.jsx`, `StatusBadge.jsx`)
-  * `src/components/layout/` (`AdminSidebar.jsx`, `AdminHeader.jsx`, `AdminLayout.jsx`)
-  * `src/context/` (`AuthContext.jsx`, `ThemeContext.jsx`, `ToastContext.jsx`)
-  * `src/routes/` (`AppRoutes.jsx`, `AdminRoute.jsx`)
+* **Target Files to Setup:**
+  * `src/components/common/` (Buttons, Inputs, Modals, Spinners)
+  * `src/components/admin/` (StatCard, StatusBadge)
+  * `src/components/layout/` (AdminSidebar, AdminHeader, AdminLayout)
+  * `src/context/` (AuthContext, ThemeContext, ToastContext)
+  * `src/routes/` (AppRoutes, AdminRoute)
 * **Responsibilities:**
-  * Provide admin dashboard layout, sidebar navigation, dark/light theme toggle, and route protection.
+  * Provide admin dashboard shell layout, sidebar navigation, dark/light theme toggle, and route protection.
   * Review all incoming Pull Requests (PRs) and merge them into `develop`.
 
 ---
 
 ### 📊 Member 10: Admin Authentication & Dashboard Analytics
-* **Target Files to Create/Edit:**
+* **Target Files to Create:**
   * `src/pages/AdminLoginPage.jsx`
   * `src/pages/DashboardOverview.jsx`
 * **Task Description:**
-  * Build the dedicated administrator login page with prefilled test credentials helper (`admin@koda.com` / `admin1212`) and verify that `user.role === 'admin'`.
+  * Build the dedicated administrator login page with validation and verify that `user.role === 'admin'`.
   * Build the main dashboard overview page: KPI summary cards (Total Revenue, Total Orders, Total Products, Wishlist count).
   * Build real-time sales/orders charts and display recent orders summary table.
 * **Manual Endpoints to Call:**
@@ -114,7 +116,7 @@ All admin endpoints require an active administrator JWT token (`role === 'admin'
 ---
 
 ### 📦 Member 11: Product Inventory & Management (CRUD)
-* **Target Files to Create/Edit:**
+* **Target Files to Create:**
   * `src/pages/AdminProductsPage.jsx`
   * `src/components/admin/ProductModal.jsx` (Add & Edit Modal Form)
 * **Task Description:**
@@ -131,7 +133,7 @@ All admin endpoints require an active administrator JWT token (`role === 'admin'
 ---
 
 ### 🚚 Member 12: Order Management & Status Updates
-* **Target Files to Create/Edit:**
+* **Target Files to Create:**
   * `src/pages/AdminOrdersPage.jsx`
   * `src/components/admin/StatusUpdateModal.jsx`
 * **Task Description:**
@@ -146,7 +148,7 @@ All admin endpoints require an active administrator JWT token (`role === 'admin'
 ---
 
 ### 👥 Member 13: User Administration & Active Carts Monitoring
-* **Target Files to Create/Edit:**
+* **Target Files to Create:**
   * `src/pages/AdminUsersPage.jsx`
   * `src/pages/AdminCartsPage.jsx`
 * **Task Description:**
