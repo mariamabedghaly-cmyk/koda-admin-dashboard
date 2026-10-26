@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   DollarSign,
   ShoppingBag,
@@ -7,8 +8,6 @@ import {
   RefreshCw,
   Heart,
 } from 'lucide-react';
-import axiosClient from '../api/axiosClient';
-import ENDPOINTS from '../api/endpoints';
 import StatCard from '../components/admin/StatCard';
 import StatusBadge from '../components/admin/StatusBadge';
 import Button from '../components/common/Button';
@@ -21,30 +20,45 @@ export default function DashboardOverview() {
   const [loading, setLoading] = useState(true);
   const { error: toastError } = useToast();
 
-  const loadDashboardData = async () => {
+  // =========================================================================
+  // 💡 مثال تعليمي للربط اليدوي بالـ API للأدمن (Manual Admin API Calls):
+  // يتم جلب التوكن من localStorage وتمريره في headers
+  // =========================================================================
+  const loadDashboardDataManual = async () => {
     setLoading(true);
-    try {
-      // Calls Admin APIs in parallel
-      const [orderStatsRes, wishStatsRes] = await Promise.allSettled([
-        axiosClient.get(ENDPOINTS.ADMIN_ORDERS.DASHBOARD),
-        axiosClient.get(ENDPOINTS.WISHLIST.ADMIN_STATS),
-      ]);
+    const token = localStorage.getItem('token');
 
-      if (orderStatsRes.status === 'fulfilled') {
-        setStats(orderStatsRes.value.dashboard || orderStatsRes.value.data || orderStatsRes.value);
-      }
-      if (wishStatsRes.status === 'fulfilled') {
-        setWishlistStats(wishStatsRes.value.statistics || wishStatsRes.value.data || wishStatsRes.value);
-      }
+    try {
+      // 1. استدعاء إحصائيات الطلبات يدوياً
+      const ordersRes = await axios.get(
+        'https://e-commerce-api-3wara.vercel.app/orders/admin/dashboard',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setStats(ordersRes.data?.dashboard || ordersRes.data || {});
+
+      // 2. استدعاء إحصائيات المفضلة يدوياً
+      const wishRes = await axios.get(
+        'https://e-commerce-api-3wara.vercel.app/wishlists/admin/stats',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setWishlistStats(wishRes.data?.statistics || wishRes.data || {});
     } catch (err) {
-      toastError(err.message || 'Failed to load dashboard metrics');
+      toastError(err.response?.data?.message || err.message || 'فشل تحميل بيانات لوحة التحكم');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadDashboardData();
+    loadDashboardDataManual();
   }, []);
 
   return (
@@ -53,10 +67,10 @@ export default function DashboardOverview() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Performance Overview
+            لوحة الإحصائيات العامة (Live Metrics)
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Real-time analytics and revenue metrics from Koda Store API
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+            GET /orders/admin/dashboard & /wishlists/admin/stats (Manual Headers)
           </p>
         </div>
 
@@ -65,9 +79,9 @@ export default function DashboardOverview() {
           size="sm"
           icon={RefreshCw}
           loading={loading}
-          onClick={loadDashboardData}
+          onClick={loadDashboardDataManual}
         >
-          Refresh Analytics
+          تحديث الإحصائيات يدوياً
         </Button>
       </div>
 
@@ -107,7 +121,7 @@ export default function DashboardOverview() {
           <h3 className="font-bold text-base text-slate-900 dark:text-white">
             Recent Store Orders
           </h3>
-          <span className="text-xs text-slate-400">Live API updates</span>
+          <span className="text-xs text-slate-400">بيانات حية مباشرة من السيرفر</span>
         </div>
 
         {loading ? (

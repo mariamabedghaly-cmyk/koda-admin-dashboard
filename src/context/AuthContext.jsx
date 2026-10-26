@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import axiosClient from '../api/axiosClient';
-import ENDPOINTS from '../api/endpoints';
+import axios from 'axios';
 
 const AuthContext = createContext({
   user: null,
@@ -14,9 +13,9 @@ const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('koda_token') || null);
+  const [token, setToken] = useState(() => localStorage.getItem('token') || null);
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('koda_user');
+    const saved = localStorage.getItem('user');
     try {
       return saved ? JSON.parse(saved) : null;
     } catch {
@@ -25,73 +24,78 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch current user from /auth/me when token is present
   const refreshUser = useCallback(async () => {
-    if (!token) {
+    const currentToken = localStorage.getItem('token');
+    if (!currentToken) {
       setUser(null);
       setLoading(false);
       return;
     }
 
     try {
-      const res = await axiosClient.get(ENDPOINTS.AUTH.ME);
-      // The API returns { success: true, user: { ... } } or similar
-      const userData = res.user || res.data || res;
+      const res = await axios.get('https://e-commerce-api-3wara.vercel.app/auth/me', {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
+      });
+      const userData = res.data?.user || res.data;
       setUser(userData);
-      localStorage.setItem('koda_user', JSON.stringify(userData));
+      localStorage.setItem('user', JSON.stringify(userData));
     } catch (err) {
-      console.warn('Failed to refresh user profile:', err.message);
-      // If unauthorized, token is already purged by axiosClient interceptor
+      console.warn('Failed to refresh admin profile:', err.message);
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setToken(null);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     refreshUser();
   }, [refreshUser]);
 
-  // Handle external logout events (e.g., from 401 interceptor)
-  useEffect(() => {
-    const handleForceLogout = () => {
-      setToken(null);
-      setUser(null);
-    };
-    window.addEventListener('koda_auth_logout', handleForceLogout);
-    return () => window.removeEventListener('koda_auth_logout', handleForceLogout);
-  }, []);
-
-  // Standard Login function
   const login = async (email, password) => {
-    const res = await axiosClient.post(ENDPOINTS.AUTH.LOGIN, { email, password });
-    
-    // API typically returns token in response or cookie:
-    const receivedToken = res.token || res.data?.token;
-    const receivedUser = res.user || res.data?.user;
+    const res = await axios.post('https://e-commerce-api-3wara.vercel.app/auth/login', {
+      email,
+      password,
+    });
+
+    const receivedToken = res.data?.token || res.data?.data?.token;
+    const receivedUser = res.data?.user || res.data?.data?.user;
 
     if (receivedToken) {
-      localStorage.setItem('koda_token', receivedToken);
+      localStorage.setItem('token', receivedToken);
       setToken(receivedToken);
     }
     if (receivedUser) {
-      localStorage.setItem('koda_user', JSON.stringify(receivedUser));
+      localStorage.setItem('user', JSON.stringify(receivedUser));
       setUser(receivedUser);
     } else {
       await refreshUser();
     }
 
-    return res;
+    return res.data;
   };
 
-  // Standard Logout function
   const logout = async () => {
     try {
-      await axiosClient.post(ENDPOINTS.AUTH.LOGOUT);
+      const currentToken = localStorage.getItem('token');
+      if (currentToken) {
+        await axios.post(
+          'https://e-commerce-api-3wara.vercel.app/auth/logout',
+          {},
+          { headers: { Authorization: `Bearer ${currentToken}` } }
+        );
+      }
     } catch (err) {
       console.error('Logout error:', err.message);
     } finally {
-      localStorage.removeItem('koda_token');
-      localStorage.removeItem('koda_user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       setToken(null);
       setUser(null);
     }
