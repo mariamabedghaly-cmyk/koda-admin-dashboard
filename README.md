@@ -4,7 +4,19 @@ Welcome to the **Koda Store Admin Dashboard** repository! This project represent
 
 * **Repository:** [https://github.com/mariamabedghaly-cmyk/koda-admin-dashboard](https://github.com/mariamabedghaly-cmyk/koda-admin-dashboard)
 * **Team:** Member 1 (Team Leader) & Members 10 through 13
-* **Tech Stack:** React 18, Vite, Tailwind CSS, React Router DOM v6, Axios
+* **Tech Stack:** React 18, Vite, Tailwind CSS v3, React Router DOM v6, Axios, Lucide Icons (`lucide-react`), React Hook Form, Zod
+
+## 📦 Standardized Team Libraries (Installed & Ready)
+
+To prevent merge conflicts and inconsistent dependencies, the team uses a single unified stack:
+* **UI Styling:** Tailwind CSS (`tailwindcss`)
+* **Icons:** Lucide React (`lucide-react`) — *e.g. `import { LayoutDashboard, Users, Package } from 'lucide-react'`*
+* **Routing:** React Router DOM (`react-router-dom`)
+* **HTTP Client:** Axios (`axios`)
+* **Form Handling:** React Hook Form (`react-hook-form`)
+* **Form Validation:** Zod (`zod`) + `@hookform/resolvers`
+
+---
 
 > ⚠️ **TRAINING WORKSPACE SPECIFICATION:**  
 > This repository is a **clean starter boilerplate**. There are **no pre-built components or pages** in the codebase. Each team member is required to **create their assigned files from scratch**, build the UI with Tailwind CSS, and write the **manual API integration** directly using `axios` as specified below.
