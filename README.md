@@ -4,7 +4,7 @@ Welcome to the **Koda Store Admin Dashboard** repository! This project represent
 
 * **Repository:** [https://github.com/mariamabedghaly-cmyk/koda-admin-dashboard](https://github.com/mariamabedghaly-cmyk/koda-admin-dashboard)
 * **Team:** Member 1 (Team Leader) & Members 10 through 13
-* **Tech Stack:** React 18, Vite, Tailwind CSS v3, React Router DOM v6, Axios, Lucide Icons (`lucide-react`), React Hook Form, Zod
+* **Tech Stack:** React 19, Vite, Tailwind CSS v4, React Router DOM v6, Axios, Lucide Icons (`lucide-react`), React Hook Form, Zod
 
 ## 📦 Standardized Team Libraries (Installed & Ready)
 
